@@ -1,0 +1,21 @@
+
+> audit-data-checker@1.0.0 generate-sample
+> node scripts/generate-sample.js
+
+SheetJS bundle is absent; generating sample.xlsx with the development-only fixture writer. Browser import/export still requires the vendored SheetJS bundle.
+{
+  "rows": 2000,
+  "totalAmountCents": 9085345780,
+  "firstDigitCounts": [
+    217,
+    208,
+    212,
+    225,
+    218,
+    220,
+    213,
+    226,
+    261
+  ],
+  "xlsxWriter": "development-only OOXML fixture writer (Node built-ins)"
+}

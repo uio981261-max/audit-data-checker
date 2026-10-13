@@ -1,0 +1,13 @@
+{
+  "coverageYears": [],
+  "holidays": [
+    {
+      "date": null,
+      "name": "PLACEHOLDER — เติมชื่อและวันที่วันหยุดจากประกาศทางการ",
+      "source": "https://www.bot.or.th/ — ให้แทนที่ด้วย URL ของประกาศวันหยุดสำหรับปีนั้น หรือประกาศรัฐบาลที่ตรวจสอบแล้ว",
+      "verified": false,
+      "placeholder": true
+    }
+  ],
+  "note": "ไม่มีวันหยุดที่ยืนยันแล้วในไฟล์ตั้งต้น ห้ามใช้ placeholder เป็นวันหยุดจริง เติมวันที่ YYYY-MM-DD (ค.ศ.) พร้อม source แล้วตั้ง verified:true และลบ placeholder หลังตรวจสอบประกาศรัฐบาล/ธนาคารแห่งประเทศไทย เพิ่ม coverageYears เป็น {year:2026,source:URL ของประกาศ,verified:true} เฉพาะเมื่อรายการครบทั้งปีและตรวจสอบแล้ว"
+}

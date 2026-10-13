@@ -1,0 +1,89 @@
+
+> audit-data-checker@1.0.0 test
+> node --test tests/*.test.js
+
+✔ tests/amount-hygiene.test.js (80.124444ms)
+✔ tests/completeness-benford.test.js (67.394298ms)
+✔ tests/date-checks.test.js (56.512247ms)
+✔ tests/document-checks.test.js (54.59935ms)
+✔ tests/integration.test.js (262.940348ms)
+✔ tests/loader-export.test.js (56.367891ms)
+✔ tests/purity.test.js (70.457646ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 658.254875
+
+Additional assertion verification on Node v24.19.0: plain Node imports the seven unchanged test files from a temporary module outside this repository.
+Command: node /tmp/audit-node-test-aggregate-jMrfrW/run-tests.mjs
+✔ round: empty input and blank, zero, malformed values have no flags (2.842088ms)
+✔ round: exact thresholds overlap without counting a row twice (13.006221ms)
+✔ round: configurable thresholds are positive, deduplicated, and cent-safe (0.563208ms)
+✔ round: source rows are retained and not mutated (0.211154ms)
+✔ round: near-multiples are never accepted by a floating-point tolerance (0.306166ms)
+✔ round: scientific numeric values and sub-cent thresholds retain exact decimal ratios (0.215039ms)
+✔ hygiene: empty and clean numeric rows are not flagged (0.413025ms)
+✔ hygiene: every numeric text amount is flagged, including negatives and Thai digits (0.326866ms)
+✔ hygiene: NBSP, zero-width, edge spaces, and mapped text fields are inspected (0.213277ms)
+✔ hygiene: malformed amounts are explained and not silently converted (0.544921ms)
+✔ hygiene: format controls cleaned by other checks are also visibly reported (0.163823ms)
+✔ completeness: empty input with absent or zero controls is complete (0.32928ms)
+✔ completeness: sums signed and cleaned Thai/text amounts at currency precision (0.168421ms)
+✔ completeness: zero controls remain meaningful and mismatch flags are aggregate (0.41009ms)
+✔ completeness: blank and invalid amounts are excluded and explicitly warned (0.14826ms)
+✔ completeness: malformed controls cannot appear to match (0.163013ms)
+✔ completeness: Excel row cap and evidence of truncation are warned (0.203092ms)
+✔ completeness: exact decimals round the final aggregate once with symmetric signed halves (0.257834ms)
+✔ completeness: unsafe monetary aggregates cannot appear to match control totals (0.385313ms)
+✔ benford: empty, blanks, zeros, and invalid amounts are skipped (0.281579ms)
+✔ benford: first significant digit handles negatives, decimals, Thai text, and scientific numbers (0.242561ms)
+✔ benford: exactly 300 usable amounts shows a distribution without row conclusions (1.419161ms)
+✔ benford: accepted large decimal text retains its original significant digit (0.108221ms)
+✔ date parser normalizes Thai digits, BE, whitespace and day-first separators (0.483269ms)
+✔ date parser rejects blank cells, short years, malformed and impossible years (0.310451ms)
+✔ date parser checks the real calendar, including BE leap years (0.116454ms)
+✔ Excel serial dates support both epochs and fractional time without timezone shifts (0.327206ms)
+✔ explicit year choices apply to written dates only (0.099127ms)
+✔ calendar check empty input and no verified holiday table (0.435508ms)
+✔ calendar check uses only verified real holiday dates and reports full-year coverage separately (0.492413ms)
+✔ calendar respects 1904 dates and shows source coverage when explicit selection is incompatible (0.133829ms)
+✔ calendar does not treat empty or nontext source fields as verified holiday evidence (0.148651ms)
+✔ year check empty, uniform and native dates do not invent mixtures (0.282119ms)
+✔ year check flags minority written years and preserves converted dates even for explicit selection (0.245765ms)
+✔ year check ties flag both written systems; malformed dates are reported once (0.124846ms)
+✔ document checks accept empty input (0.303792ms)
+✔ duplicates normalize case, digit runs, whitespace, Thai digits and invisible characters (0.37623ms)
+✔ all duplicate rows are flagged while blank identifiers are excluded (0.14751ms)
+✔ zero and negative document values normalize without discarding sign (0.234088ms)
+✔ sequence finds compact gaps per prefix and retains source row numbers (0.51759ms)
+✔ sequence accepts Thai suffixes and plain integer documents (0.297012ms)
+✔ sequence skips blanks, negative and fractional numeric documents (0.150244ms)
+✔ duplicate-only sequence does not create gaps or boundary missing numbers (0.123694ms)
+✔ giant gaps are one exact serializable range without expanding missing numbers (0.170243ms)
+✔ string suffixes above the safe integer limit are exact; unsafe numeric cells are skipped (0.095652ms)
+✔ documented EXPECTED.md is canonical and its complete JSON equals EXPECTED.json (0.313437ms)
+✔ all eight checks on the actual sample XLSX match EXPECTED.md exactly without external dependencies (33.126385ms)
+✔ all eight checks on actual sample CSV retain business results and honestly flag all 2000 text amounts (38.716472ms)
+✔ actual fixtures preserve numeric/text types, planted raw characters and all 2001 source rows (3.221012ms)
+✔ test-only CSV reader handles BOM, quotes, commas, multiline fields and blank rows without type guessing (0.715935ms)
+✔ test-only XLSX reader rejects a truncated archive instead of returning partial fixture rows (2.347743ms)
+﹣ XLSX import preserves physical row numbers, raw numeric/text cells and the 1904 date system (0.054421ms) # SheetJS browser bundle vendor/xlsx.full.min.js is absent; run node scripts/vendor-libraries.js to verify real SheetJS import/export
+﹣ pasted CSV and TSV retain literal strings, Thai digits and blank row positions (0.036665ms) # SheetJS browser bundle vendor/xlsx.full.min.js is absent; run node scripts/vendor-libraries.js to verify real SheetJS import/export
+✔ header aliases work in Thai/English and never reuse a source column (0.379715ms)
+✔ mapping permits omitted optional fields and rejects invalid or reused columns (0.444942ms)
+﹣ loader records cached, uncached and error formula cells and truncation metadata (0.037235ms) # SheetJS browser bundle vendor/xlsx.full.min.js is absent; run node scripts/vendor-libraries.js to verify real SheetJS import/export
+﹣ report round-trip contains Summary plus eight checks, traceable rows and literal strings (0.027351ms) # SheetJS browser bundle vendor/xlsx.full.min.js is absent; run node scripts/vendor-libraries.js to verify real SheetJS import/export
+﹣ sample follows the browser loader, auto mapping, all-check runner and nine-sheet export flow (0.023234ms) # SheetJS browser bundle vendor/xlsx.full.min.js is absent; run node scripts/vendor-libraries.js to verify real SheetJS import/export
+✔ all eight checks retain frozen source records and options and return JSON-serializable review results (0.878617ms)
+ℹ tests 59
+ℹ suites 0
+ℹ pass 54
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 5
+ℹ todo 0
+ℹ duration_ms 195.724855

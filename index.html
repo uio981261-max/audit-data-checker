@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#173b43">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="description" content="เครื่องมือตรวจความครบถ้วนและความสอดคล้องของข้อมูลบัญชี ก่อนเริ่มงานสอบทาน ประมวลผลในเบราว์เซอร์เท่านั้น">
+    <title>Audit Data Checker — เตรียมข้อมูลก่อนสอบทาน</title>
+    <link rel="stylesheet" href="src/styles.css">
+    <script src="vendor/xlsx.full.min.js" defer></script>
+    <script src="vendor/chart.umd.min.js" defer></script>
+    <script type="module" src="src/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">ข้ามไปยังเนื้อหา</a>
+    <header class="site-header">
+      <div class="page-shell header-inner">
+        <a class="brand" href="./" aria-label="Audit Data Checker หน้าหลัก">
+          <span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>Audit Data Checker</span>
+        </a>
+        <span class="header-note"><span class="status-dot" aria-hidden="true"></span>ทำงานในเบราว์เซอร์</span>
+      </div>
+    </header>
+
+    <main id="main-content" class="page-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">เตรียมข้อมูลก่อนเริ่มงานสอบบัญชี</p>
+          <h1 id="page-title">ข้อมูลพร้อม<br><span>การสอบทานก็ชัดเจนขึ้น</span></h1>
+          <p class="hero-description">ตรวจความครบถ้วนและความสอดคล้องของรายการบัญชี เพื่อค้นหารายการที่ควรสอบทานก่อนเริ่มทดสอบ</p>
+        </div>
+        <aside class="privacy-card" aria-label="ความเป็นส่วนตัวของข้อมูล">
+          <svg class="privacy-icon" width="28" height="30" viewBox="0 0 28 30" fill="none" aria-hidden="true"><path d="M14 2 25 6v8c0 7-6 11-11 14C9 25 3 21 3 14V6l11-4Z" stroke="currentColor" stroke-width="1.7"/><path d="m9 14 3 3 7-7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div>
+            <h2>ข้อมูลอยู่กับคุณ</h2>
+            <p>ข้อมูลของคุณถูกประมวลผลในเบราว์เซอร์เท่านั้น ไม่ถูกส่งออกไปที่ใด</p>
+            <span class="privacy-detail">ไม่มีบัญชีผู้ใช้ · ไม่มีการบันทึกข้อมูลบนเซิร์ฟเวอร์</span>
+          </div>
+        </aside>
+      </section>
+
+      <nav class="workflow" aria-label="ขั้นตอนการตรวจข้อมูล">
+        <ol>
+          <li id="step-import" class="is-current" data-step="import" aria-current="step"><span class="step-number">1</span><span>นำเข้าข้อมูล</span></li>
+          <li id="step-mapping" data-step="mapping"><span class="step-number">2</span><span>จับคู่คอลัมน์</span></li>
+          <li id="step-results" data-step="results"><span class="step-number">3</span><span>ผลการสอบทาน</span></li>
+        </ol>
+      </nav>
+
+      <div id="app-error" class="notice error-notice" role="alert" hidden></div>
+      <p id="loading-status" class="loading-status" role="status" aria-live="polite"></p>
+
+      <section id="import-panel" class="workspace-panel" aria-labelledby="import-title">
+        <div class="panel-heading">
+          <div><p class="section-kicker">เริ่มต้น</p><h2 id="import-title">นำเข้าข้อมูลที่ต้องการสอบทาน</h2></div>
+          <span class="quiet-tag">สมุดรายวัน · ใบแจ้งหนี้ · ใบสำคัญจ่าย</span>
+        </div>
+        <p class="section-description">ใช้แถวแรกเป็นชื่อคอลัมน์ และเก็บแต่ละรายการไว้ในหนึ่งแถว คุณจะเลือกชีตและจับคู่คอลัมน์ได้ในขั้นตอนถัดไป</p>
+
+        <div class="import-options">
+          <label class="upload-card" for="file-input">
+            <input id="file-input" type="file" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" aria-describedby="file-help">
+            <span class="upload-icon" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M15 20V5m-5 5 5-5 5 5M6 19v6h18v-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="upload-title">อัปโหลดไฟล์ (.xlsx / .csv)</span>
+            <span id="file-help" class="upload-description">เลือกไฟล์จากอุปกรณ์ของคุณ</span>
+            <span class="upload-cta" aria-hidden="true">เลือกไฟล์ <span>↗</span></span>
+          </label>
+          <div class="sample-card">
+            <span class="sample-label">ลองก่อนด้วยข้อมูลสมมติ</span>
+            <h3>สำรวจวิธีทำงาน</h3>
+            <p>ทดลองตรวจใบสำคัญจ่ายสมมติที่มีรายการให้ฝึกสอบทาน พร้อมดูตัวอย่างรายงานที่ส่งออก</p>
+            <button id="sample-button" class="button button-secondary" type="button">ใช้ข้อมูลตัวอย่าง <span aria-hidden="true">→</span></button>
+            <span class="sample-note">สร้างขึ้นเพื่อการเรียนรู้ ไม่มีข้อมูลจริง</span>
+          </div>
+        </div>
+
+        <details class="paste-details">
+          <summary><span class="paste-summary-icon" aria-hidden="true">▤</span> หรือวางข้อมูลจากตาราง</summary>
+          <div class="paste-content">
+            <label for="paste-input">ข้อมูลที่คัดลอกจาก Excel หรือไฟล์ CSV</label>
+            <p id="paste-help" class="field-help">รวมชื่อคอลัมน์ในแถวแรก รองรับคอลัมน์ที่คั่นด้วยแท็บหรือจุลภาค</p>
+            <textarea id="paste-input" rows="7" placeholder="เลขที่เอกสาร&#9;วันที่บันทึก&#9;จำนวนเงิน" aria-describedby="paste-help" spellcheck="false"></textarea>
+            <button id="paste-button" class="button button-primary" type="button">นำเข้าข้อมูลที่วาง <span aria-hidden="true">→</span></button>
+          </div>
+        </details>
+        <div class="interpretation-note"><span aria-hidden="true">i</span><p>ผลตรวจเป็นจุดเริ่มต้นในการสอบทาน แต่ละรายการควรตรวจเทียบกับเอกสารและบริบทของกิจการก่อนสรุปผล</p></div>
+      </section>
+
+      <section id="mapping-panel" class="workspace-panel" aria-labelledby="mapping-title" hidden>
+        <div class="panel-heading">
+          <div><p class="section-kicker">เตรียมข้อมูล</p><h2 id="mapping-title">จับคู่คอลัมน์และกำหนดค่าตรวจ</h2></div>
+          <span id="source-name" class="quiet-tag"></span>
+        </div>
+        <p class="section-description">ตรวจสอบคอลัมน์ที่เลือกอัตโนมัติ แล้วระบุรูปแบบปีและยอดควบคุมจากระบบต้นทางหากมี</p>
+        <div class="source-controls">
+          <div class="field"><label for="sheet-select">ชีตที่ต้องการตรวจ</label><select id="sheet-select"></select></div>
+          <div class="field"><label for="year-system">ระบบปีของวันที่</label><select id="year-system"><option value="auto">ตรวจหาอัตโนมัติ</option><option value="be">พ.ศ.</option><option value="ce">ค.ศ.</option></select><p class="field-help">การตรวจปีปะปนยังคงตรวจค่าปีเดิมในข้อมูล</p></div>
+        </div>
+        <div id="mapping-fields" class="mapping-grid"></div>
+        <div class="preview-heading"><h3>ตัวอย่างข้อมูล</h3><span>สูงสุด 20 แถวแรก</span></div>
+        <div id="preview-container" class="table-wrap preview-table" tabindex="0" role="region" aria-label="ตัวอย่างข้อมูล 20 แถวแรก"></div>
+        <div class="settings-grid">
+          <fieldset class="settings-box">
+            <legend>ยอดควบคุมจากระบบต้นทาง <span>(ไม่บังคับ)</span></legend>
+            <p class="field-help">ใช้เปรียบเทียบความครบถ้วนของข้อมูลที่นำเข้า</p>
+            <div class="paired-fields">
+              <div class="field"><label for="expected-rows">จำนวนรายการที่คาดหวัง</label><input id="expected-rows" type="number" inputmode="numeric" min="0" step="1" placeholder="เช่น 2000"></div>
+              <div class="field"><label for="expected-amount">ยอดรวมจำนวนเงินที่คาดหวัง</label><input id="expected-amount" type="number" inputmode="decimal" step="any" placeholder="เช่น 1250000.50"></div>
+            </div>
+          </fieldset>
+          <fieldset class="settings-box">
+            <legend>เกณฑ์จำนวนเงินกลม</legend>
+            <p class="field-help">ตรวจจำนวนเงินที่เป็นพหุคูณของแต่ละเกณฑ์</p>
+            <div class="paired-fields">
+              <div class="field"><label for="threshold-one">เกณฑ์ที่ 1</label><input id="threshold-one" type="number" inputmode="decimal" min="0.01" step="any" value="1000"></div>
+              <div class="field"><label for="threshold-two">เกณฑ์ที่ 2</label><input id="threshold-two" type="number" inputmode="decimal" min="0.01" step="any" value="10000"></div>
+            </div>
+          </fieldset>
+        </div>
+        <div id="holiday-coverage" class="notice"></div>
+        <div id="mapping-error" class="notice error-notice" role="alert" hidden></div>
+        <div class="panel-actions"><p>รายการที่พบจะใช้ถ้อยคำเป็นกลางเพื่อประกอบการสอบทาน</p><button id="run-button" class="button button-primary" type="button">เริ่มตรวจข้อมูล <span aria-hidden="true">→</span></button></div>
+      </section>
+
+      <section id="results-panel" class="results-panel" aria-labelledby="results-title" hidden>
+        <div class="panel-heading results-heading">
+          <div><p class="section-kicker">ผลการตรวจข้อมูล</p><h2 id="results-title">รายการที่ควรสอบทาน</h2><div id="result-overview" class="section-description"></div></div>
+          <button id="export-button" class="button button-primary" type="button"><span aria-hidden="true">↓</span> ส่งออกรายงาน .xlsx</button>
+        </div>
+        <div class="notice results-notice">ผลตรวจแสดงข้อสังเกตเพื่อสอบทานเพิ่มเติม ควรพิจารณาร่วมกับเอกสารต้นทางและบริบทของรายการก่อนสรุปผล</div>
+        <div id="summary-cards" class="summary-grid"></div>
+        <div class="results-section-heading"><h3>รายละเอียดแต่ละการตรวจ</h3><p>เปิดหัวข้อเพื่อดูรายการและแนวทางสอบทาน</p></div>
+        <div id="results-sections" class="results-sections"></div>
+        <p id="results-live" class="visually-hidden" role="status" aria-live="polite"></p>
+        <div class="results-actions"><button id="back-button" class="button button-secondary" type="button"><span aria-hidden="true">←</span> กลับไปปรับการจับคู่คอลัมน์</button></div>
+      </section>
+
+      <section class="scope-note" aria-label="ขอบเขตของเครื่องมือ"><h2>ตรวจข้อมูลเบื้องต้น เพื่อวางแผนงานให้รอบคอบ</h2><p>ครอบคลุมเลขที่เอกสาร วันที่ จำนวนเงิน ความครบถ้วน และการกระจายตัวของตัวเลข ผลตรวจช่วยระบุรายการที่ควรสอบทานเพิ่มเติม ไม่ใช้แทนดุลยพินิจทางวิชาชีพ</p></section>
+    </main>
+
+    <footer class="site-footer"><div class="page-shell footer-inner"><span class="footer-brand">Audit Data Checker</span><p>โครงการผลงานเพื่อการเรียนรู้ด้านการสอบบัญชี · ข้อมูลตัวอย่างเป็นข้อมูลสมมติทั้งหมด</p><span>ประมวลผลภายในเบราว์เซอร์ของคุณ</span></div></footer>
+    <noscript><p class="noscript-notice">กรุณาเปิดใช้งาน JavaScript เพื่อประมวลผลข้อมูลภายในเบราว์เซอร์</p></noscript>
+  </body>
+</html>

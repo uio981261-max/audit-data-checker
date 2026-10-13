@@ -1,0 +1,66 @@
+{
+  "seed": "0x000A0D17",
+  "canonicalFile": "sample.xlsx",
+  "rowCount": 2000,
+  "physicalRowsIncludingHeader": 2001,
+  "totalAmountCents": 9085345780,
+  "totalAmount": 90853457.8,
+  "checks": {
+    "duplicates": {
+      "count": 24,
+      "groupCount": 12,
+      "rawDifferedGroups": 4,
+      "rowNumbers": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001]
+    },
+    "sequence": {
+      "count": 7,
+      "missingCount": 7,
+      "missingNumbers": ["100", "300", "500", "700", "900", "1100", "1300"]
+    },
+    "calendar": {
+      "count": 15,
+      "weekendCount": 15,
+      "holidayCount": 0,
+      "invalidDateCount": 0,
+      "coveredYears": [],
+      "uncoveredYears": [2026],
+      "rowNumbers": [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56]
+    },
+    "round": {
+      "count": 20,
+      "countsByThreshold": { "1000": 20, "10000": 10 },
+      "validAmountCount": 2000,
+      "rowNumbers": [102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121]
+    },
+    "hygiene": {
+      "count": 12,
+      "countsByType": { "edgeSpaces": 4, "textNumber": 9, "numberCommas": 5, "nonBreakingSpace": 2, "zeroWidth": 3, "thaiDigits": 1 },
+      "rowNumbers": [152, 153, 154, 155, 156, 157, 158, 159, 160, 1991, 1992, 1993]
+    },
+    "years": {
+      "count": 6,
+      "systemCounts": { "be": 6, "ce": 1994 },
+      "majoritySystem": "ce",
+      "minoritySystem": "be",
+      "invalidDateCount": 0,
+      "mixedYearCount": 6,
+      "rowNumbers": [72, 73, 74, 75, 76, 77]
+    },
+    "completeness": {
+      "count": 0,
+      "rowCount": 2000,
+      "amountSum": 90853457.8,
+      "validAmountCount": 2000,
+      "invalidAmountCount": 0,
+      "rowDifference": 0,
+      "amountDifference": 0
+    },
+    "benford": {
+      "count": 0,
+      "usableCount": 2000,
+      "excludedCount": 0,
+      "skipped": false,
+      "digitCounts": [217, 208, 212, 225, 218, 220, 213, 226, 261]
+    }
+  }
+}

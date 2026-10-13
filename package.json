@@ -1,0 +1,13 @@
+{
+  "name": "audit-data-checker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": { "node": ">=22.22.0" },
+  "scripts": {
+    "vendor": "node scripts/vendor-libraries.js",
+    "test": "node --test tests/*.test.js",
+    "generate-sample": "node scripts/generate-sample.js",
+    "serve": "node scripts/serve.js"
+  }
+}

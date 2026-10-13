@@ -1,0 +1,87 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Vendor libraries
+        run: npm run vendor
+
+      - name: Test and require 59 passing cases
+        shell: bash
+        run: |
+          set -eu
+          set -o pipefail
+          npm test 2>&1 | tee "$RUNNER_TEMP/audit-test-output.txt"
+          node --input-type=module - "$RUNNER_TEMP/audit-test-output.txt" <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const output = readFileSync(process.argv[2], 'utf8')
+            .replace(/\u001b\[[0-?]*[ -/]*[@-~]/g, '');
+          const summary = new Map();
+          for (const line of output.split(/\r?\n/)) {
+            const match = /^(?:#|ℹ)?\s*(tests|pass|fail|cancelled|skipped)\s+(\d+)\s*$/.exec(line);
+            if (!match) continue;
+            if (summary.has(match[1])) throw new Error('Duplicate test summary: ' + match[1]);
+            summary.set(match[1], Number(match[2]));
+          }
+          const expected = { tests: 59, pass: 59, fail: 0, cancelled: 0, skipped: 0 };
+          for (const [name, count] of Object.entries(expected)) {
+            if (summary.get(name) !== count) {
+              throw new Error('Expected ' + name + ' ' + count + '; received ' + summary.get(name));
+            }
+          }
+          console.log('Verified test summary: ' + JSON.stringify(Object.fromEntries(summary)));
+          NODE
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Stage website files
+        shell: bash
+        run: |
+          set -eu
+          rm -rf _site
+          mkdir -p _site/src _site/data _site/vendor
+          cp index.html .nojekyll _site/
+          cp -R src/. _site/src/
+          cp data/sample.xlsx data/sample.csv data/th-holidays.json _site/data/
+          cp vendor/xlsx.full.min.js vendor/chart.umd.min.js _site/vendor/
+          # Preserve required license notices without publishing development docs.
+          cp vendor/LICENSE-SheetJS.txt _site/vendor/LICENSE-SheetJS
+          cp vendor/LICENSE-Chartjs.md _site/vendor/LICENSE-Chartjs
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site/
+          include-hidden-files: true
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
